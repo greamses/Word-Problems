@@ -537,6 +537,7 @@ function loadProblem(index) {
     solutionArea.classList.add('active');
   }
 }
+
 function loadProgress() {
   try {
     const savedScore = localStorage.getItem('mathProblemScore');
@@ -943,21 +944,17 @@ function toggleFormulaDisplay() {
 function togglePolypad() {
   const isCurrentlyVisible = polypad.classList.contains('visible');
   
-  // If opening this tool, close others first
   if (!isCurrentlyVisible) {
     closeAllTools();
   }
   
-  // Toggle visibility states
   polypad.classList.toggle('visible');
   polypadBtn.classList.toggle('active');
-  
-  // Initialize if needed and first time opening
+
   if (polypad.classList.contains('visible') && !polypadInstance) {
     initPolypad();
   }
   
-  // Manage lower tools bar state
   updateLowerToolsState();
 }
 
@@ -988,15 +985,106 @@ function toggleGm() {
   canvas.classList.toggle('expand');
   gmBtn.classList.toggle('active');
   
-  if (canvas.classList.contains('visible') && !gmInstance) {
-    initGm();
-  }
+  // if (canvas.classList.contains('expand') && !gmInstance) {
+  //   initGm();
+  // }
   
   updateLowerToolsState();
 }
 
+function toggleGoogleCalc() {
+  const googleCalcEmbed = document.getElementById('google-calculator-embed');
+  const googleCalcBtn = document.getElementById('google-calc-btn');
+  const isCurrentlyVisible = googleCalcEmbed.classList.contains('visible');
+  
+  if (!isCurrentlyVisible) {
+    closeAllTools();
+  }
+  
+  googleCalcEmbed.classList.toggle('visible');
+  googleCalcBtn.classList.toggle('active');
+  
+  updateLowerToolsState();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const googleCalcBtn = document.getElementById('google-calc-btn');
+  const googleCalcEmbed = document.getElementById('google-calculator-embed');
+  
+  function toggleGoogleCalc() {
+    const isCurrentlyVisible = googleCalcEmbed.classList.contains('visible');
+    
+    // If opening this tool, close others first
+    if (!isCurrentlyVisible) {
+      closeAllTools();
+    }
+    
+    // Toggle visibility
+    googleCalcEmbed.classList.toggle('visible');
+    googleCalcBtn.classList.toggle('active');
+    
+    updateLowerToolsState();
+  }
+  
+  if (googleCalcBtn && googleCalcEmbed) {
+    // Toggle math solver canvas
+    googleCalcBtn.addEventListener('click', toggleGoogleCalc);
+    
+    // Close when clicking outside the iframe
+    googleCalcEmbed.addEventListener('click', function(e) {
+      if (e.target === googleCalcEmbed) {
+        toggleGoogleCalc();
+      }
+    });
+  }
+  
+  // Function to close all tools
+  function closeAllTools() {
+    const toolElements = [
+      document.getElementById('polypad'),
+      document.getElementById('calculator'),
+      document.getElementById('gm-canvas-container'),
+      document.getElementById('google-calculator-embed')
+    ];
+    
+    toolElements.forEach(element => {
+      if (element) {
+        element.classList.remove('visible');
+        element.classList.remove('expand');
+      }
+    });
+    
+    const toolButtons = [
+      document.getElementById('polypad-btn'),
+      document.querySelector('.desmos-btn'),
+      document.querySelector('.gm-btn'),
+      document.getElementById('google-calc-btn')
+    ];
+    
+    toolButtons.forEach(button => {
+      if (button) button.classList.remove('active');
+    });
+  }
+  
+  // Function to update lower tools state
+  function updateLowerToolsState() {
+    const lowerTools = document.querySelector('.lower-tools');
+    const anyToolOpen =
+      (document.getElementById('polypad') && document.getElementById('polypad').classList.contains('visible')) ||
+      (document.getElementById('calculator') && document.getElementById('calculator').classList.contains('visible')) ||
+      (document.getElementById('gm-canvas-container') && document.getElementById('gm-canvas-container').classList.contains('expand')) ||
+      (document.getElementById('google-calculator-embed') && document.getElementById('google-calculator-embed').classList.contains('visible'));
+    
+    if (anyToolOpen) {
+      lowerTools.classList.add('collapsed');
+    } else {
+      lowerTools.classList.remove('collapsed');
+    }
+  }
+});
+
 function closeAllTools() {
-  const toolElements = [polypad, desmos, document.getElementById('gm-canvas-container')];
+  const toolElements = [polypad, desmos, document.getElementById('gm-canvas-container'), document.getElementById('google-calculator-embed')];
   toolElements.forEach(element => {
     if (element) element.classList.remove('visible');
   });

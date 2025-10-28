@@ -11,6 +11,61 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+  <style>
+    /* Google Math Solver Button Styling */
+    .google-calc-btn {
+      width: 50px;
+      height: 50px;
+      background: transparent;
+      font-size: 2rem;
+      display: grid;
+      place-items: center;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 50%;
+    }
+    
+    .google-calc-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .google-calc-btn.active {
+      background-color: rgba(66, 133, 244, 0.1);
+    }
+    
+    .google-calc-logo {
+      width: 100%;
+      height: 100%;
+      scale: 0.85;
+      border-radius: 50%;
+    }
+    
+    /* Google Math Solver Canvas */
+    #google-calculator-embed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      transform: translateY(-100%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 1000;
+      background: white;
+      border: none;
+    }
+    
+    #google-calculator-embed.visible {
+      transform: translateY(0);
+    }
+    
+    #google-calculator-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -68,7 +123,6 @@
     <div class="controls">
       <button id="reset-btn" class="btn">Reset</button>
       <button id="new-problem-btn" class="btn">New Problem</button>
-      
     </div>
   </div>
   
@@ -83,6 +137,9 @@
       <button class="gm-btn">
         <img src="https://graspablemath.com/shared/imgs/gm-logo-big.png" class="gm-logo" alt="graspable math logo" />
       </button>
+      <button id="google-calc-btn" class="google-calc-btn" title="Google Math Solver">
+        <img src="https://cdn2.iconfinder.com/data/icons/ios7-inspired-mac-icon-set/512/Calculator_512.png" class="google-calc-logo" alt="Google Math Solver">
+      </button>
       <button class="desmos-btn">
         <img src="https://images.squarespace-cdn.com/content/v1/55e76219e4b03fb450e52fe5/1494389714603-ZI7D67CCGCEGGDCWRXJV/Graphing.png?format=1500w" class="gm-logo" alt="graspable math logo" />
       </button>
@@ -90,15 +147,22 @@
   </div>
   
   <button id="formula-btn" class="tool-btn" title="Show/Hide Formula">
-    <i class="fas fa-square-root-alt"></i> 
+    <i class="fas fa-square-root-alt"></i>
   </button>
   
+  <!-- Tool Canvases -->
   <div id="calculator"></div>
-  
   <div id="polypad"></div>
+  <div id="gm-canvas-container"></div>
+  
+  <!-- Google Math Solver Canvas -->
+  <div id="google-calculator-embed">
+    <iframe src="https://www.google.com/search?q=math+solver&igu=1"></iframe>
+  </div>
   
   <script src="https://static.mathigon.org/api/polypad-en-v5.0.5.js"></script>
   <script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
   <script src="script.js" type="module"></script>
 </body>
 
